@@ -5,8 +5,19 @@ import os
 
 def get_noroccidente_frame(parent):
     noroccidente_frame = customtkinter.CTkFrame(master=parent, corner_radius=0)
-    label = customtkinter.CTkLabel(noroccidente_frame, text="Procesamiento de Archivos NorOccidente")
+    label = customtkinter.CTkLabel(noroccidente_frame, text="Procesamiento de Archivos NorOccidente", font=("Arial", 24))
     label.pack(pady=20)
+
+    # Texto de guía para el usuario encargado
+    guide_label = customtkinter.CTkLabel(
+        noroccidente_frame,
+        text="Instrucciones:\n1. Primero, cargue el archivo Excel con la información de los contratos.\n"
+             "2. Asegúrese de que las columnas tengan los nombres correctos: 'NO. DE CONTRATO' y 'NO. DE CEDULA'.\n"
+             "3. Luego, haga clic en 'Procesar Archivo' para eliminar duplicados y guardar los resultados.",
+        wraplength=400,
+        justify="left"
+    )
+    guide_label.pack(pady=10)
 
     # Etiqueta para mostrar el archivo cargado
     file_label = customtkinter.CTkLabel(noroccidente_frame, text="")
@@ -54,10 +65,25 @@ def get_noroccidente_frame(parent):
             # Identificar registros duplicados en base a 'NO. DE CEDULA'
             duplicates = data[data.duplicated(subset='NO. DE CEDULA', keep=False)]
 
-            # Guardar el archivo con dos hojas en la carpeta Documentos
-            documents_path = os.path.expanduser("~/Documents")
-            output_path = os.path.join(documents_path, "Direccion_Territorial_NorOccidente_Procesado.xlsx")
+            # Preguntar al usuario si quiere seleccionar la ubicación de guardado
+            save_choice = messagebox.askyesno("Guardar archivo", "¿Desea seleccionar la ubicación para guardar el archivo procesado?")
 
+            if save_choice:
+                # Permitir al usuario elegir la ubicación para guardar el archivo
+                output_path = filedialog.asksaveasfilename(
+                    defaultextension=".xlsx",
+                    filetypes=[("Excel files", "*.xlsx"), ("All files", "*.*")],
+                    title="Guardar archivo procesado como"
+                )
+                if not output_path:
+                    # Si el usuario cancela la operación de guardado, terminar la función
+                    return
+            else:
+                # Guardar en la carpeta Documentos por defecto
+                documents_path = os.path.expanduser("~/Documents")
+                output_path = os.path.join(documents_path, "Direccion_Territorial_NorOccidente_Procesado.xlsx")
+
+            # Guardar el archivo con dos hojas
             with pd.ExcelWriter(output_path) as writer:
                 data_cleaned.to_excel(writer, sheet_name='Eliminados Duplicados', index=False)
                 duplicates.to_excel(writer, sheet_name='Duplicados', index=False)
@@ -73,3 +99,4 @@ def get_noroccidente_frame(parent):
     process_button.pack(pady=20)
 
     return noroccidente_frame
+

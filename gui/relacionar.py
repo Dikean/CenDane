@@ -5,16 +5,28 @@ import os
 
 def get_relacionar_frame(parent):
     relacionar_frame = customtkinter.CTkFrame(master=parent, corner_radius=0)
-    label = customtkinter.CTkLabel(relacionar_frame, text="Configuración de Fusión de Archivos")
+    label = customtkinter.CTkLabel(relacionar_frame, text="Configuración de Fusión de Archivos", font=("Arial", 24))
     label.pack(pady=20)
+
+
+   # Instrucción para guiar al usuario sobre el proceso de fusión
+    instruction_label = customtkinter.CTkLabel(
+        relacionar_frame,
+        text="Instrucción: Cargue ambos archivos y especifique la columna ID común, luego presione 'Fusionar Archivos'.",
+        wraplength=400,  # Limitar el ancho del texto
+        justify="left"  # Alinear el texto a la izquierda
+    )
+    instruction_label.place(relx=0.5, rely=0.15, anchor="n")  # Colocar la instrucción más arriba, centrada
+    instruction_label.pack(pady=20)
 
     # Crear un contenedor de dos columnas para los botones de carga de archivos
     file_buttons_frame = customtkinter.CTkFrame(master=relacionar_frame)
     file_buttons_frame.pack(pady=10, padx=20, fill="x")
 
+     
     # Campo de entrada para las columnas comunes
-    merge_column_entry = customtkinter.CTkEntry(file_buttons_frame, placeholder_text="Columna común para fusionar...")
-    merge_column_entry.grid(row=0, column=0, padx=5, pady=5, sticky="w")  # Posicionar a la izquierda
+    merge_column_entry = customtkinter.CTkEntry(file_buttons_frame, placeholder_text="Columna ID...")
+    merge_column_entry.grid(row=0, column=0, padx=8, pady=8, sticky="w")  # Posicionar a la izquierda
 
     # Etiquetas para mostrar los archivos cargados
     primary_file_label = customtkinter.CTkLabel(file_buttons_frame, text="")
@@ -42,6 +54,8 @@ def get_relacionar_frame(parent):
                                                     command=lambda: load_file(secondary_file_path, "Seleccione el archivo secundario", secondary_file_label))
     load_secondary_button.grid(row=1, column=1, padx=5, pady=5, sticky="e")
     secondary_file_label.grid(row=2, column=1, padx=5, pady=5, sticky="e")
+
+
 
     # Función para fusionar los archivos directamente
     def merge_into_primary():
@@ -82,7 +96,7 @@ def get_relacionar_frame(parent):
 
     # Botón para fusionar archivos
     merge_button = customtkinter.CTkButton(relacionar_frame, text="Fusionar Archivos", command=merge_into_primary)
-    merge_button.pack(pady=20)
+    merge_button.place(relx=0.9, rely=0.4, anchor="ne")
 
     return relacionar_frame
 
