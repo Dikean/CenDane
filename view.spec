@@ -5,7 +5,7 @@ a = Analysis(
     ['view.py'],
     pathex=[],
     binaries=[],
-    datas=[('assets', 'assets'), ('gui', 'gui'), ('Credentials.json', '.')],
+    datas=[('./Credentials.json', '.'), ('./Firebase.json', '.'), ('./assets', 'assets/,'), ('./Connect_Firebase.py', '.'), ('gui', 'gui')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

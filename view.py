@@ -3,9 +3,14 @@ from tkinter import Menu
 from PIL import Image, ImageTk  # Importa para manejar la imagen
 import os
 import sys
+
 from gui.home import get_home_frame
 from gui.relacionar import get_relacionar_frame
 from gui.NorOccidente import get_noroccidente_frame
+from gui.Personal_Select import get_personal_select_frame
+from gui.Count_Barrido import get_count_barrido_frame
+
+from Connect_Firebase import db  # Importamos db del archivo Connect_Firebase
 
 customtkinter.set_appearance_mode("dark")  # Modo oscuro
 customtkinter.set_default_color_theme("blue")  # Tema de color azul
@@ -25,7 +30,10 @@ class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
         self.title("CenDANE")
-        self.geometry("900x500")
+        self.geometry("1100x600")
+
+        # Llamada para obtener datos de Firebase y mostrarlos por consola
+        self.fetch_data_from_firestore()
 
         # Sidebar y área de contenido
         self.setup_ui()
@@ -67,8 +75,12 @@ class App(customtkinter.CTk):
         self.button_home = customtkinter.CTkButton(self.sidebar, text="HOME", command=self.show_home)
         self.button_home.pack(pady=10, padx=10, fill='x')
 
-        self.button_assignments = customtkinter.CTkButton(self.sidebar, text="MIS ASIGNADOS",
-                                                          command=lambda: self.button_action("Button 2"))
+        self.button_assignments = customtkinter.CTkButton(self.sidebar, text="PERSONAL SELECCIONADO",
+                                                          command=self.show_personal_select)
+        self.button_assignments.pack(pady=10, padx=10, fill='x')
+
+        self.button_assignments = customtkinter.CTkButton(self.sidebar, text="BARRIDO",
+                                                          command=self.show_barrido)
         self.button_assignments.pack(pady=10, padx=10, fill='x')
 
         self.button_with_menu = customtkinter.CTkButton(self.sidebar, text="OPCIONES")
@@ -89,6 +101,12 @@ class App(customtkinter.CTk):
     def show_noroccidente(self):
         self.switch_frame(get_noroccidente_frame)
 
+    def show_personal_select(self):
+        self.switch_frame(get_personal_select_frame)
+
+    def show_barrido(self):
+        self.switch_frame(get_count_barrido_frame)
+
     def switch_frame(self, frame_func):
         if self.current_frame is not None:
             self.current_frame.pack_forget()
@@ -103,6 +121,18 @@ class App(customtkinter.CTk):
 
     def menu_action(self, option):
         print(f"{option} selected from menu")
+
+    def fetch_data_from_firestore(self):
+        try:
+            # Acceder a la colección "usuarios"
+            users_ref = db.collection('usuarios')  # Cambia 'usuarios' por el nombre de tu colección en Firestore
+            docs = users_ref.stream()
+
+            # Iterar sobre los documentos de la colección y mostrar la información
+            for doc in docs:
+                print(f'{doc.id} => {doc.to_dict()}')  # Imprime el ID del documento y los datos en forma de diccionario
+        except Exception as e:
+            print(f"Error al obtener los datos de Firestore: {e}")
 
 if __name__ == "__main__":
     app = App()

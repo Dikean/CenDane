@@ -103,21 +103,22 @@ def open_search_dialog(parent, table):
 def get_data_from_google_sheets():
     # Usar el archivo credentials.json para autenticarte
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    
     credentials_path = get_resource_path('./Credentials.json')
     creds = ServiceAccountCredentials.from_json_keyfile_name(credentials_path, scope)
     client = gspread.authorize(creds)
     
     # Abrir la hoja de cálculo por ID
-    sheet_id = "159CgHiDNcUK-bTSRLFWhCXhYzpF0zk4Y9yR9U2GxiG0"
+    sheet_id = "16pCE_88pfw1ASf8oB_epNgQrlwbU04ZYwcBQiFd49Hw"
     sheet = client.open_by_key(sheet_id).sheet1
     
     # Obtener todos los valores de la hoja
     data = sheet.get_all_values()
     
     # Mostrar los datos en la consola
-    print("Datos obtenidos desde Google Sheets:")
-    for row in data:
-        print(row)
+    # print("Datos obtenidos desde Google Sheets:")
+    # for row in data:
+    #  print(row)
     
     # Devuelve los datos en formato adecuado para el Treeview
     return data
@@ -204,8 +205,15 @@ def handle_selected_downloads(table, df):
 def download_documents_for_selected_row(row_values, df, loading_window):
     try:
         # Crear la carpeta principal en la carpeta de Documentos con cédula y nombre
-        cedula = row_values[12]
-        nombre = row_values[1]  # Supongamos que el nombre está en la columna 1
+        cedula = row_values[10]
+        nombre = row_values[7]  # Supongamos que el nombre está en la columna 1
+
+        for index, row_values in df.iterrows():
+            cedula = row_values[10]  # Suponiendo que la cédula está en la columna 10 (índice 10)
+            nombre = row_values[7]   # Suponiendo que el nombre está en la columna 7 (índice 7)
+            
+            # Mostrar los valores de la fila
+            print(f"Fila {index}: Cédula: {cedula}, Nombre: {nombre}")
 
         # Intentar guardar en la carpeta "Documentos"
         try:
