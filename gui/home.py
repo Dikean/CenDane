@@ -205,12 +205,12 @@ def handle_selected_downloads(table, df):
 def download_documents_for_selected_row(row_values, df, loading_window):
     try:
         # Crear la carpeta principal en la carpeta de Documentos con cédula y nombre
-        cedula = row_values[10]
-        nombre = row_values[7]  # Supongamos que el nombre está en la columna 1
+        cedula = row_values[9]
+        nombre = row_values[6]  # Supongamos que el nombre está en la columna 1
 
         for index, row_values in df.iterrows():
-            cedula = row_values[10]  # Suponiendo que la cédula está en la columna 10 (índice 10)
-            nombre = row_values[7]   # Suponiendo que el nombre está en la columna 7 (índice 7)
+            cedula = row_values[9]  # Suponiendo que la cédula está en la columna 10 (índice 10)
+            nombre = row_values[6]   # Suponiendo que el nombre está en la columna 7 (índice 7)
             
             # Mostrar los valores de la fila
             print(f"Fila {index}: Cédula: {cedula}, Nombre: {nombre}")
